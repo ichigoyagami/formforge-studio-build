@@ -5,7 +5,7 @@
 [Setup]
 AppId={{9D80DE8C-6289-44E8-A339-F87C81092496}
 AppName=FormForge Studio
-AppVersion=0.10.0
+AppVersion=0.19.0
 AppPublisher=FormForge Studio
 DefaultDirName={localappdata}\Programs\FormForge Studio
 DefaultGroupName=FormForge Studio
@@ -20,6 +20,7 @@ OutputDir=output
 OutputBaseFilename=FormForgeStudio-Setup
 SetupLogging=yes
 LicenseFile={#SourceDir}\GPL-license.txt
+ChangesAssociations=yes
 
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -27,6 +28,12 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs 
 [Icons]
 Name: "{autoprograms}\FormForge Studio"; Filename: "{app}\FormForge.exe"; WorkingDir: "{app}"
 Name: "{userdesktop}\FormForge Studio"; Filename: "{app}\FormForge.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+
+[Registry]
+Root: HKCU; Subkey: "Software\Classes\.forge"; ValueType: string; ValueName: ""; ValueData: "FormForge.Project"; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\FormForge.Project"; ValueType: string; ValueName: ""; ValueData: "FormForge Studio Project"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\FormForge.Project\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\FormForge.exe,0"
+Root: HKCU; Subkey: "Software\Classes\FormForge.Project\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\FormForge.exe"" ""%1"""
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"; Flags: unchecked

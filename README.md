@@ -22,7 +22,10 @@ The first compile is large and may take a few hours on a GitHub-hosted Windows r
 - The compiled executable and launcher are named FormForge.
 - Windows executable metadata and icon are FormForge-branded.
 - Blender's first-run Quick Setup is disabled.
+- FormForge UI 0.19 is bundled and enabled at first startup; users do not install it separately.
 - A Maya-inspired top menu, viewport menu, shelf, Channel Box, Modeling Toolkit and Industry Compatible navigation are enabled at startup.
+- The FormForge splash and Windows application icon are compiled into the build.
+- `.forge` is registered as the FormForge project extension. Existing `.blend` scenes remain openable for migration and compatibility.
 - Workspaces are renamed for the FormForge workflow.
 - **Windows > Developer Log** opens the in-app development log.
 - **Windows > Export Diagnostics** writes a portable diagnostic report.
