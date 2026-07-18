@@ -49,7 +49,7 @@ jobs:
       - name: Download Blender build dependencies
         working-directory: blender
         shell: cmd
-        run: make update
+        run: echo y|make update
 
       - name: Compile the FormForge executable
         working-directory: blender
