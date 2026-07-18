@@ -1,0 +1,1214 @@
+diff --git a/FORMFORGE_NOTES.md b/FORMFORGE_NOTES.md
+new file mode 100644
+index 0000000..6e5b3bd
+--- /dev/null
++++ b/FORMFORGE_NOTES.md
+@@ -0,0 +1,14 @@
++# FormForge Studio source integration
++
++This Blender 5.3 alpha source tree includes the FormForge Studio Maya-inspired
++workflow layer. The application title is branded in
++`source/blender/windowmanager/intern/wm_window.cc`; the workflow add-on belongs
++under `scripts/addons_core/formforge_maya_ui` in a packaged build.
++
++For a local Windows source build, follow Blender's normal Visual Studio build
++instructions, then copy the FormForge add-on beside the packaged core add-ons.
++The ready-to-test installer uses Blender 5.1.1 stable because the supplied 5.3
++tree is an alpha development snapshot.
++
++All Blender-derived work remains under the GNU GPL. FormForge Studio does not
++include or redistribute Autodesk Maya code or assets.
+diff --git a/build_files/windows/find_blender.cmd b/build_files/windows/find_blender.cmd
+index 9adbfd3..7d7d9f6 100644
+--- a/build_files/windows/find_blender.cmd
++++ b/build_files/windows/find_blender.cmd
+@@ -5,19 +5,19 @@ if EXIST "%BLENDER_BIN%" (
+ 
+ REM Check the build folder next, if ninja was used there will be no
+ REM debug/release folder
+-set BLENDER_BIN=%BUILD_DIR%\bin\blender.exe
++set BLENDER_BIN=%BUILD_DIR%\bin\FormForge.exe
+ if EXIST "%BLENDER_BIN%" (
+     goto detect_blender_done
+ )
+ 
+ REM Check the release folder next
+-set BLENDER_BIN=%BUILD_DIR%\bin\release\blender.exe
++set BLENDER_BIN=%BUILD_DIR%\bin\release\FormForge.exe
+ if EXIST "%BLENDER_BIN%" (
+     goto detect_blender_done
+ )
+ 
+ REM Check the debug folder next
+-set BLENDER_BIN=%BUILD_DIR%\bin\debug\blender.exe
++set BLENDER_BIN=%BUILD_DIR%\bin\debug\FormForge.exe
+ if EXIST "%BLENDER_BIN%" (
+     goto detect_blender_done
+ )
+diff --git a/release/windows/icons/formforge.ico b/release/windows/icons/formforge.ico
+new file mode 100644
+index 0000000000000000000000000000000000000000..cc64e558a937c64a9d5d60a85f82b6a1cb280fb3
+GIT binary patch
+literal 102355
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/release/windows/icons/winblender.rc b/release/windows/icons/winblender.rc
+index f56ca3b..2c91627 100644
+--- a/release/windows/icons/winblender.rc
++++ b/release/windows/icons/winblender.rc
+@@ -9,7 +9,7 @@
+ 	#define BLEN_VER_RC_STR STRINGIFY(BLEN_VER_RC_STR_M)
+ #endif
+ 
+-APPICON ICON DISCARDABLE "winblender.ico"
++APPICON ICON DISCARDABLE "formforge.ico"
+ BLENDERFILE ICON DISCARDABLE "winblenderfile.ico"
+ 
+ IDR_VERSION1 VERSIONINFO
+@@ -24,11 +24,11 @@ BEGIN
+     BEGIN
+       VALUE "FileVersion", BLEN_VER_RC_STR
+       VALUE "ProductVersion", BLEN_VER_RC_STR
+-      VALUE "CompanyName", "Blender Foundation"
+-      VALUE "FileDescription", "Blender"
+-      VALUE "LegalCopyright", "GPLv3 (Blender Foundation)"
+-      VALUE "OriginalFilename", "blender.exe"
+-      VALUE "ProductName", "Blender"
++      VALUE "CompanyName", "FormForge Studio"
++      VALUE "FileDescription", "FormForge Studio 3D Creation Suite"
++      VALUE "LegalCopyright", "GPLv3-or-later; Blender Foundation and FormForge contributors"
++      VALUE "OriginalFilename", "FormForge.exe"
++      VALUE "ProductName", "FormForge Studio"
+     END
+   END
+   BLOCK "VarFileInfo"
+@@ -36,4 +36,3 @@ BEGIN
+     VALUE "Translation", 0x0409, 0x0000
+   END
+ END
+-
+diff --git a/scripts/addons_core/formforge_maya_ui/__init__.py b/scripts/addons_core/formforge_maya_ui/__init__.py
+new file mode 100644
+index 0000000..dd03c09
+--- /dev/null
++++ b/scripts/addons_core/formforge_maya_ui/__init__.py
+@@ -0,0 +1,780 @@
++"""FormForge Studio: a Maya-inspired workflow layer for Blender.
++
++This add-on deliberately uses Blender's public Python API so the same workflow
++layer can run in the stable packaged runtime and in the supplied Blender 5.3
++source tree. It does not copy Autodesk code or assets.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++import sys
++import tempfile
++import traceback
++from datetime import datetime, timezone
++
++import bpy
++from bpy.props import BoolProperty, EnumProperty, StringProperty
++from bpy_extras.io_utils import ExportHelper
++
++
++bl_info = {
++    "name": "FormForge Studio - Maya Workflow",
++    "author": "FormForge Studio contributors",
++    "version": (0, 10, 0),
++    "blender": (4, 5, 0),
++    "location": "3D Viewport > FormForge",
++    "description": "Maya-inspired menus, shelf, channel box and developer diagnostics",
++    "category": "3D View",
++}
++
++LOG_TEXT_NAME = "FormForge Developer Log"
++ADDON_VERSION = ".".join(map(str, bl_info["version"]))
++_ORIGINAL_HELP_DRAW = bpy.types.TOPBAR_MT_help.draw
++_ORIGINAL_TOPBAR_DRAW = bpy.types.TOPBAR_MT_editor_menus.draw
++_ORIGINAL_VIEW3D_MENU_DRAW = bpy.types.VIEW3D_MT_editor_menus.draw
++
++
++def _utc_now() -> str:
++    return datetime.now(timezone.utc).isoformat(timespec="seconds")
++
++
++def _log_path() -> str:
++    try:
++        base = bpy.utils.user_resource("CONFIG", path="formforge", create=False)
++        os.makedirs(base, exist_ok=True)
++    except OSError:
++        base = os.path.join(tempfile.gettempdir(), "formforge")
++        os.makedirs(base, exist_ok=True)
++    return os.path.join(base, "formforge-dev.log")
++
++
++def log_event(level: str, message: str, **details) -> None:
++    """Write one JSON line to both the internal text block and disk log."""
++    entry = {
++        "time": _utc_now(),
++        "level": level.upper(),
++        "message": message,
++        "details": details,
++    }
++    line = json.dumps(entry, ensure_ascii=False, default=str)
++    try:
++        text = bpy.data.texts.get(LOG_TEXT_NAME) or bpy.data.texts.new(LOG_TEXT_NAME)
++        text.write(line + "\n")
++    except Exception:
++        pass
++    try:
++        with open(_log_path(), "a", encoding="utf-8") as handle:
++            handle.write(line + "\n")
++    except OSError:
++        pass
++
++
++def _active_mesh(context):
++    obj = context.active_object
++    return obj if obj and obj.type == "MESH" else None
++
++
++class FORGE_Preferences(bpy.types.AddonPreferences):
++    bl_idname = __name__
++
++    maya_navigation: BoolProperty(
++        name="Maya Navigation",
++        description="Use Blender's Industry Compatible keymap where available",
++        default=True,
++    )
++    auto_dev_log: BoolProperty(
++        name="Developer Logging",
++        description="Record FormForge actions and exceptions",
++        default=True,
++    )
++    confirm_destructive: BoolProperty(
++        name="Confirm destructive operations",
++        default=True,
++    )
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.prop(self, "maya_navigation")
++        layout.prop(self, "auto_dev_log")
++        layout.prop(self, "confirm_destructive")
++        layout.operator("formforge.apply_maya_setup", icon="PREFERENCES")
++        layout.operator("formforge.open_dev_log", icon="TEXT")
++
++
++class FORGE_OT_apply_maya_setup(bpy.types.Operator):
++    bl_idname = "formforge.apply_maya_setup"
++    bl_label = "Apply Maya-style Setup"
++    bl_description = "Apply the dark studio theme, Maya navigation and viewport defaults"
++    bl_options = {"REGISTER"}
++
++    def execute(self, context):
++        warnings = []
++        try:
++            theme = context.preferences.themes[0]
++            view = theme.view_3d.space
++            view.back = (0.105, 0.105, 0.105)
++            view.text = (0.82, 0.82, 0.82)
++            view.header = (0.145, 0.145, 0.145, 1.0)
++            view.button = (0.21, 0.21, 0.21, 1.0)
++            view.button_title = (0.84, 0.84, 0.84, 1.0)
++            theme.user_interface.wcol_tool.inner = (0.16, 0.16, 0.16, 1.0)
++            theme.user_interface.wcol_tool.inner_sel = (0.17, 0.48, 0.62, 1.0)
++            context.preferences.view.show_splash = False
++            context.preferences.view.show_statusbar_stats = True
++        except Exception as exc:
++            warnings.append(f"theme: {exc}")
++
++        try:
++            preset = bpy.utils.preset_find("Industry Compatible", "keyconfig")
++            if preset:
++                bpy.ops.preferences.keyconfig_activate(filepath=preset)
++            else:
++                warnings.append("Industry Compatible keymap was not found")
++        except Exception as exc:
++            warnings.append(f"keymap: {exc}")
++
++        for area in context.screen.areas if context.screen else []:
++            if area.type != "VIEW_3D":
++                continue
++            try:
++                space = area.spaces.active
++                space.overlay.show_stats = True
++                space.overlay.show_text = True
++                space.shading.type = "SOLID"
++                space.shading.light = "STUDIO"
++                space.shading.color_type = "MATERIAL"
++            except Exception as exc:
++                warnings.append(f"viewport: {exc}")
++
++        log_event("INFO", "Maya-style setup applied", warnings=warnings)
++        if warnings:
++            self.report({"WARNING"}, "Setup applied with notes; see Developer Log")
++        else:
++            self.report({"INFO"}, "Maya-style setup applied")
++        return {"FINISHED"}
++
++
++class FORGE_OT_add_primitive(bpy.types.Operator):
++    bl_idname = "formforge.add_primitive"
++    bl_label = "Create Primitive"
++    bl_options = {"REGISTER", "UNDO"}
++
++    primitive: EnumProperty(
++        items=(
++            ("CUBE", "Cube", "Polygon cube"),
++            ("SPHERE", "Sphere", "UV sphere"),
++            ("CYLINDER", "Cylinder", "Polygon cylinder"),
++            ("PLANE", "Plane", "Polygon plane"),
++            ("TORUS", "Torus", "Polygon torus"),
++            ("CONE", "Cone", "Polygon cone"),
++        ),
++        default="CUBE",
++    )
++
++    def execute(self, _context):
++        operators = {
++            "CUBE": bpy.ops.mesh.primitive_cube_add,
++            "SPHERE": bpy.ops.mesh.primitive_uv_sphere_add,
++            "CYLINDER": bpy.ops.mesh.primitive_cylinder_add,
++            "PLANE": bpy.ops.mesh.primitive_plane_add,
++            "TORUS": bpy.ops.mesh.primitive_torus_add,
++            "CONE": bpy.ops.mesh.primitive_cone_add,
++        }
++        try:
++            operators[self.primitive]()
++            log_event("INFO", "Primitive created", primitive=self.primitive)
++            return {"FINISHED"}
++        except Exception as exc:
++            log_event("ERROR", "Primitive creation failed", error=str(exc))
++            self.report({"ERROR"}, str(exc))
++            return {"CANCELLED"}
++
++
++class FORGE_OT_freeze_transforms(bpy.types.Operator):
++    bl_idname = "formforge.freeze_transforms"
++    bl_label = "Freeze Transformations"
++    bl_description = "Apply location, rotation and scale like Maya Freeze Transformations"
++    bl_options = {"REGISTER", "UNDO"}
++
++    def execute(self, context):
++        if not context.selected_editable_objects:
++            self.report({"WARNING"}, "Select at least one object")
++            return {"CANCELLED"}
++        try:
++            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
++            log_event("INFO", "Transforms frozen", count=len(context.selected_editable_objects))
++            return {"FINISHED"}
++        except Exception as exc:
++            log_event("ERROR", "Freeze transformations failed", error=str(exc))
++            self.report({"ERROR"}, str(exc))
++            return {"CANCELLED"}
++
++
++class FORGE_OT_center_pivot(bpy.types.Operator):
++    bl_idname = "formforge.center_pivot"
++    bl_label = "Center Pivot"
++    bl_options = {"REGISTER", "UNDO"}
++
++    def execute(self, context):
++        if not context.selected_editable_objects:
++            self.report({"WARNING"}, "Select at least one object")
++            return {"CANCELLED"}
++        bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
++        log_event("INFO", "Pivots centered", count=len(context.selected_editable_objects))
++        return {"FINISHED"}
++
++
++class FORGE_OT_delete_history(bpy.types.Operator):
++    bl_idname = "formforge.delete_history"
++    bl_label = "Delete Construction History"
++    bl_description = "Apply visible modifiers on selected mesh objects"
++    bl_options = {"REGISTER", "UNDO"}
++
++    @classmethod
++    def poll(cls, context):
++        return context.mode == "OBJECT" and bool(context.selected_editable_objects)
++
++    def invoke(self, context, _event):
++        prefs = context.preferences.addons.get(__name__)
++        if prefs and prefs.preferences.confirm_destructive:
++            return context.window_manager.invoke_confirm(self, _event)
++        return self.execute(context)
++
++    def execute(self, context):
++        original_active = context.view_layer.objects.active
++        applied = 0
++        skipped = []
++        for obj in list(context.selected_editable_objects):
++            if obj.type != "MESH":
++                continue
++            context.view_layer.objects.active = obj
++            for modifier in list(obj.modifiers):
++                try:
++                    bpy.ops.object.modifier_apply(modifier=modifier.name)
++                    applied += 1
++                except Exception as exc:
++                    skipped.append(f"{obj.name}/{modifier.name}: {exc}")
++        context.view_layer.objects.active = original_active
++        log_event("INFO", "Construction history deleted", applied=applied, skipped=skipped)
++        self.report({"INFO"}, f"Applied {applied} modifier(s)")
++        return {"FINISHED"}
++
++
++class FORGE_OT_smooth_preview(bpy.types.Operator):
++    bl_idname = "formforge.smooth_preview"
++    bl_label = "Smooth Mesh Preview"
++    bl_description = "Toggle a non-destructive subdivision preview (Maya key 3 equivalent)"
++    bl_options = {"REGISTER", "UNDO"}
++
++    def execute(self, context):
++        obj = _active_mesh(context)
++        if not obj:
++            self.report({"WARNING"}, "Select a mesh object")
++            return {"CANCELLED"}
++        modifier = obj.modifiers.get("FormForge Smooth Preview")
++        if modifier:
++            modifier.show_viewport = not modifier.show_viewport
++            enabled = modifier.show_viewport
++        else:
++            modifier = obj.modifiers.new("FormForge Smooth Preview", "SUBSURF")
++            modifier.levels = 2
++            modifier.render_levels = 2
++            enabled = True
++        for polygon in obj.data.polygons:
++            polygon.use_smooth = enabled
++        log_event("INFO", "Smooth preview toggled", object=obj.name, enabled=enabled)
++        return {"FINISHED"}
++
++
++class FORGE_OT_xray_toggle(bpy.types.Operator):
++    bl_idname = "formforge.xray_toggle"
++    bl_label = "X-Ray"
++    bl_options = {"REGISTER"}
++
++    def execute(self, context):
++        space = context.space_data
++        if not space or space.type != "VIEW_3D":
++            return {"CANCELLED"}
++        space.shading.show_xray = not space.shading.show_xray
++        log_event("INFO", "X-Ray toggled", enabled=space.shading.show_xray)
++        return {"FINISHED"}
++
++
++class FORGE_OT_open_dev_log(bpy.types.Operator):
++    bl_idname = "formforge.open_dev_log"
++    bl_label = "Developer Log"
++    bl_description = "Open the in-app FormForge developer log"
++
++    def execute(self, context):
++        text = bpy.data.texts.get(LOG_TEXT_NAME) or bpy.data.texts.new(LOG_TEXT_NAME)
++        area = context.area
++        if not area:
++            self.report({"ERROR"}, "No active editor area")
++            return {"CANCELLED"}
++        area.type = "TEXT_EDITOR"
++        area.spaces.active.text = text
++        return {"FINISHED"}
++
++
++class FORGE_OT_restore_viewport(bpy.types.Operator):
++    bl_idname = "formforge.restore_viewport"
++    bl_label = "Return to 3D View"
++
++    def execute(self, context):
++        if context.area:
++            context.area.type = "VIEW_3D"
++        return {"FINISHED"}
++
++
++class FORGE_OT_export_diagnostics(bpy.types.Operator, ExportHelper):
++    bl_idname = "formforge.export_diagnostics"
++    bl_label = "Export Diagnostic Report"
++    filename_ext = ".txt"
++    filter_glob: StringProperty(default="*.txt", options={"HIDDEN"})
++
++    def execute(self, context):
++        text = bpy.data.texts.get(LOG_TEXT_NAME)
++        report = [
++            "FormForge Studio Diagnostic Report",
++            f"Generated: {_utc_now()}",
++            f"FormForge: {ADDON_VERSION}",
++            f"Blender: {bpy.app.version_string}",
++            f"Platform: {platform.platform()}",
++            f"Python: {platform.python_version()}",
++            f"Scene: {context.scene.name if context.scene else 'None'}",
++            f"Objects: {len(bpy.data.objects)}",
++            "",
++            "Events (oldest to newest):",
++            text.as_string() if text else "No events recorded.",
++        ]
++        try:
++            with open(self.filepath, "w", encoding="utf-8") as handle:
++                handle.write("\n".join(report))
++            log_event("INFO", "Diagnostic report exported", path=self.filepath)
++            self.report({"INFO"}, "Diagnostic report exported")
++            return {"FINISHED"}
++        except OSError as exc:
++            self.report({"ERROR"}, str(exc))
++            return {"CANCELLED"}
++
++
++class FORGE_OT_about(bpy.types.Operator):
++    bl_idname = "formforge.about"
++    bl_label = "About FormForge Studio"
++
++    def invoke(self, context, _event):
++        return context.window_manager.invoke_props_dialog(self, width=460)
++
++    def execute(self, _context):
++        return {"FINISHED"}
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.label(text="FormForge Studio", icon="MESH_CUBE")
++        layout.label(text=f"Version {ADDON_VERSION}")
++        layout.separator()
++        layout.label(text="Professional 3D creation, modelling and sculpting environment.")
++        layout.label(text="Engine foundation: Blender open-source technology.")
++        layout.label(text="Distributed under the GNU General Public License.")
++
++
++class FORGE_MT_create(bpy.types.Menu):
++    bl_label = "Create"
++    bl_idname = "FORGE_MT_create"
++
++    def draw(self, _context):
++        layout = self.layout
++        for key, label, icon in (
++            ("CUBE", "Polygon Cube", "MESH_CUBE"),
++            ("SPHERE", "Polygon Sphere", "MESH_UVSPHERE"),
++            ("CYLINDER", "Polygon Cylinder", "MESH_CYLINDER"),
++            ("PLANE", "Polygon Plane", "MESH_PLANE"),
++            ("TORUS", "Polygon Torus", "MESH_TORUS"),
++            ("CONE", "Polygon Cone", "MESH_CONE"),
++        ):
++            op = layout.operator("formforge.add_primitive", text=label, icon=icon)
++            op.primitive = key
++        layout.separator()
++        layout.operator("object.camera_add", text="Camera", icon="CAMERA_DATA")
++        layout.menu("VIEW3D_MT_light_add", text="Lights", icon="LIGHT")
++
++
++class FORGE_MT_modify(bpy.types.Menu):
++    bl_label = "Modify"
++    bl_idname = "FORGE_MT_modify"
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.operator("formforge.freeze_transforms", icon="CHECKMARK")
++        layout.operator("formforge.center_pivot", icon="PIVOT_BOUNDBOX")
++        layout.operator("formforge.delete_history", icon="TRASH")
++        layout.separator()
++        layout.operator("object.location_clear", text="Reset Transforms")
++        layout.operator("object.visual_transform_apply", text="Bake Pivot")
++
++
++class FORGE_MT_select(bpy.types.Menu):
++    bl_label = "Select"
++    bl_idname = "FORGE_MT_select"
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.operator("object.select_all", text="All").action = "SELECT"
++        layout.operator("object.select_all", text="Deselect All").action = "DESELECT"
++        layout.operator("object.select_all", text="Invert Selection").action = "INVERT"
++        layout.separator()
++        layout.operator("object.select_hierarchy", text="Select Hierarchy").direction = "CHILD"
++
++
++class FORGE_MT_display(bpy.types.Menu):
++    bl_label = "Display"
++    bl_idname = "FORGE_MT_display"
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.operator("view3d.view_axis", text="Front").type = "FRONT"
++        layout.operator("view3d.view_axis", text="Side").type = "RIGHT"
++        layout.operator("view3d.view_axis", text="Top").type = "TOP"
++        layout.separator()
++        layout.operator("formforge.xray_toggle", text="X-Ray")
++        layout.operator("object.hide_view_set", text="Hide Selected")
++        layout.operator("object.hide_view_clear", text="Show All")
++
++
++class FORGE_MT_mesh(bpy.types.Menu):
++    bl_label = "Mesh"
++    bl_idname = "FORGE_MT_mesh"
++
++    def draw(self, context):
++        layout = self.layout
++        if context.mode == "OBJECT":
++            layout.operator("object.join", text="Combine", icon="AUTOMERGE_ON")
++            layout.operator("mesh.separate", text="Separate", icon="AUTOMERGE_OFF")
++            layout.operator("formforge.smooth_preview", icon="MOD_SUBSURF")
++        else:
++            layout.operator("mesh.bridge_edge_loops", text="Bridge")
++            layout.operator("mesh.fill", text="Fill Hole")
++            layout.operator("mesh.quads_convert_to_tris", text="Triangulate")
++            layout.operator("mesh.tris_convert_to_quads", text="Quadrangulate")
++
++
++class FORGE_MT_edit_mesh(bpy.types.Menu):
++    bl_label = "Edit Mesh"
++    bl_idname = "FORGE_MT_edit_mesh"
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.operator("mesh.extrude_region_move", text="Extrude")
++        layout.operator("mesh.bevel", text="Bevel")
++        layout.operator("mesh.inset", text="Inset")
++        layout.operator("mesh.loopcut_slide", text="Insert Edge Loop")
++        layout.operator("mesh.knife_tool", text="Multi-Cut / Knife")
++        layout.operator("mesh.merge", text="Merge Components")
++        layout.operator("mesh.dissolve_mode", text="Delete Edge/Vertex")
++
++
++class FORGE_MT_deform(bpy.types.Menu):
++    bl_label = "Deform"
++    bl_idname = "FORGE_MT_deform"
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.operator("object.modifier_add", text="Lattice").type = "LATTICE"
++        layout.operator("object.modifier_add", text="Bend / Simple Deform").type = "SIMPLE_DEFORM"
++        layout.operator("object.modifier_add", text="Shrinkwrap").type = "SHRINKWRAP"
++        layout.operator("object.modifier_add", text="Surface Deform").type = "SURFACE_DEFORM"
++
++
++class FORGE_MT_windows(bpy.types.Menu):
++    bl_label = "Windows"
++    bl_idname = "FORGE_MT_windows"
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.operator("formforge.open_dev_log", icon="TEXT")
++        layout.operator("formforge.export_diagnostics", icon="EXPORT")
++        layout.separator()
++        layout.operator("screen.userpref_show", text="Settings / Preferences", icon="PREFERENCES")
++        layout.operator("wm.console_toggle", text="System Console", icon="CONSOLE")
++
++
++def draw_maya_menus(self, context):
++    self.layout.menu("VIEW3D_MT_view")
++    self.layout.menu("FORGE_MT_select")
++    self.layout.menu("FORGE_MT_create")
++    self.layout.menu("FORGE_MT_modify")
++    if context.active_object and context.active_object.type == "MESH":
++        self.layout.menu("FORGE_MT_mesh")
++        self.layout.menu("FORGE_MT_edit_mesh")
++    self.layout.menu("FORGE_MT_deform")
++    self.layout.menu("FORGE_MT_display")
++    self.layout.menu("FORGE_MT_windows")
++
++
++def draw_formforge_topbar(self, _context):
++    layout = self.layout
++    layout.menu("TOPBAR_MT_file")
++    layout.menu("TOPBAR_MT_edit")
++    layout.menu("FORGE_MT_create")
++    layout.menu("FORGE_MT_modify")
++    layout.menu("FORGE_MT_display")
++    layout.menu("FORGE_MT_windows")
++    layout.menu("TOPBAR_MT_help")
++
++
++def draw_shelf(self, context):
++    layout = self.layout
++    layout.separator_spacer()
++    row = layout.row(align=True)
++    row.operator("formforge.add_primitive", text="", icon="MESH_CUBE").primitive = "CUBE"
++    row.operator("formforge.add_primitive", text="", icon="MESH_UVSPHERE").primitive = "SPHERE"
++    row.operator("formforge.add_primitive", text="", icon="MESH_CYLINDER").primitive = "CYLINDER"
++    row.separator()
++    if context.mode == "OBJECT":
++        row.operator("formforge.freeze_transforms", text="", icon="CHECKMARK")
++        row.operator("formforge.center_pivot", text="", icon="PIVOT_BOUNDBOX")
++        row.operator("formforge.smooth_preview", text="", icon="MOD_SUBSURF")
++    row.operator("formforge.xray_toggle", text="", icon="XRAY")
++    row.operator("formforge.open_dev_log", text="", icon="TEXT")
++
++
++class FORGE_PT_channel_box(bpy.types.Panel):
++    bl_label = "Channel Box"
++    bl_idname = "FORGE_PT_channel_box"
++    bl_space_type = "VIEW_3D"
++    bl_region_type = "UI"
++    bl_category = "FormForge"
++
++    def draw(self, context):
++        layout = self.layout
++        obj = context.active_object
++        if not obj:
++            layout.label(text="No object selected", icon="INFO")
++            return
++        layout.label(text=obj.name, icon="OBJECT_DATA")
++        col = layout.column(align=True)
++        col.prop(obj, "location", text="Translate")
++        col.prop(obj, "rotation_euler", text="Rotate")
++        col.prop(obj, "scale", text="Scale")
++        if obj.type == "MESH":
++            layout.separator()
++            layout.label(text=f"Vertices: {len(obj.data.vertices):,}")
++            layout.label(text=f"Edges: {len(obj.data.edges):,}")
++            layout.label(text=f"Faces: {len(obj.data.polygons):,}")
++
++
++class FORGE_PT_modeling(bpy.types.Panel):
++    bl_label = "Modeling Toolkit"
++    bl_idname = "FORGE_PT_modeling"
++    bl_space_type = "VIEW_3D"
++    bl_region_type = "UI"
++    bl_category = "FormForge"
++
++    def draw(self, context):
++        layout = self.layout
++        grid = layout.grid_flow(columns=3, align=True)
++        for key, label, icon in (
++            ("CUBE", "Cube", "MESH_CUBE"),
++            ("SPHERE", "Sphere", "MESH_UVSPHERE"),
++            ("CYLINDER", "Cylinder", "MESH_CYLINDER"),
++            ("PLANE", "Plane", "MESH_PLANE"),
++            ("TORUS", "Torus", "MESH_TORUS"),
++            ("CONE", "Cone", "MESH_CONE"),
++        ):
++            grid.operator("formforge.add_primitive", text=label, icon=icon).primitive = key
++        layout.separator()
++        if context.mode == "OBJECT":
++            layout.operator("formforge.freeze_transforms")
++            layout.operator("formforge.center_pivot")
++            layout.operator("formforge.smooth_preview")
++            layout.operator("formforge.delete_history")
++        elif context.mode == "EDIT_MESH":
++            row = layout.row(align=True)
++            row.operator("mesh.extrude_region_move", text="Extrude")
++            row.operator("mesh.bevel", text="Bevel")
++            row = layout.row(align=True)
++            row.operator("mesh.loopcut_slide", text="Edge Loop")
++            row.operator("mesh.knife_tool", text="Multi-Cut")
++
++
++class FORGE_PT_diagnostics(bpy.types.Panel):
++    bl_label = "Developer"
++    bl_idname = "FORGE_PT_diagnostics"
++    bl_space_type = "VIEW_3D"
++    bl_region_type = "UI"
++    bl_category = "FormForge"
++    bl_options = {"DEFAULT_CLOSED"}
++
++    def draw(self, _context):
++        layout = self.layout
++        layout.label(text=f"FormForge {ADDON_VERSION}")
++        layout.label(text=f"Blender {bpy.app.version_string}")
++        layout.operator("formforge.open_dev_log", icon="TEXT")
++        layout.operator("formforge.export_diagnostics", icon="EXPORT")
++        layout.operator("formforge.apply_maya_setup", icon="PREFERENCES")
++
++
++def draw_text_header(self, _context):
++    space = self.layout.context_pointer_set
++    _ = space
++    if getattr(bpy.context.space_data, "text", None) and bpy.context.space_data.text.name == LOG_TEXT_NAME:
++        self.layout.operator("formforge.restore_viewport", icon="VIEW3D")
++        self.layout.operator("formforge.export_diagnostics", icon="EXPORT")
++
++
++def draw_formforge_help(self, _context):
++    layout = self.layout
++    layout.operator("formforge.about", icon="INFO")
++    layout.operator("formforge.open_dev_log", icon="TEXT")
++    layout.operator("formforge.export_diagnostics", icon="EXPORT")
++    layout.separator()
++    op = layout.operator("wm.url_open", text="3D Engine Manual", icon="HELP")
++    op.url = "https://docs.blender.org/manual/en/latest/"
++
++
++def _brand_native_windows():
++    if sys.platform != "win32" or bpy.app.background:
++        return None
++    try:
++        import ctypes
++        from ctypes import wintypes
++
++        user32 = ctypes.windll.user32
++        process_id = os.getpid()
++        windows = []
++
++        @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
++        def enum_callback(hwnd, _lparam):
++            pid = wintypes.DWORD()
++            user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
++            if pid.value == process_id and user32.IsWindowVisible(hwnd):
++                windows.append(hwnd)
++            return True
++
++        user32.EnumWindows(enum_callback, 0)
++        for hwnd in windows:
++            length = user32.GetWindowTextLengthW(hwnd)
++            buffer = ctypes.create_unicode_buffer(length + 1)
++            user32.GetWindowTextW(hwnd, buffer, length + 1)
++            old_title = buffer.value
++            if old_title and "FormForge Studio" not in old_title:
++                project = os.path.basename(bpy.data.filepath) if bpy.data.filepath else "Untitled"
++                user32.SetWindowTextW(hwnd, f"{project} - FormForge Studio {ADDON_VERSION}")
++    except Exception as exc:
++        log_event("WARNING", "Native window branding could not be applied", error=str(exc))
++    return 2.0
++
++
++def _load_handler(_unused):
++    log_event("INFO", "Scene loaded", filepath=bpy.data.filepath or "Unsaved")
++
++
++def _apply_formforge_startup():
++    """Apply the visible FormForge defaults once Blender has a window."""
++    try:
++        bpy.ops.formforge.apply_maya_setup()
++        rename = {
++            "Layout": "General",
++            "Modeling": "Polygon",
++            "Sculpting": "Sculpt",
++            "UV Editing": "UV",
++            "Shading": "Lookdev",
++            "Animation": "Animate",
++            "Rendering": "Render",
++            "Compositing": "Composite",
++            "Geometry Nodes": "Procedural",
++            "Scripting": "Developer",
++        }
++        for old_name, new_name in rename.items():
++            workspace = bpy.data.workspaces.get(old_name)
++            if workspace and not bpy.data.workspaces.get(new_name):
++                workspace.name = new_name
++        for screen in bpy.data.screens:
++            for area in screen.areas:
++                if area.type == "VIEW_3D":
++                    area.spaces.active.show_region_ui = True
++        log_event("INFO", "FormForge startup workspace applied")
++    except Exception as exc:
++        log_event("ERROR", "FormForge startup failed", error=str(exc))
++    return None
++
++
++CLASSES = (
++    FORGE_Preferences,
++    FORGE_OT_apply_maya_setup,
++    FORGE_OT_add_primitive,
++    FORGE_OT_freeze_transforms,
++    FORGE_OT_center_pivot,
++    FORGE_OT_delete_history,
++    FORGE_OT_smooth_preview,
++    FORGE_OT_xray_toggle,
++    FORGE_OT_open_dev_log,
++    FORGE_OT_restore_viewport,
++    FORGE_OT_export_diagnostics,
++    FORGE_OT_about,
++    FORGE_MT_create,
++    FORGE_MT_modify,
++    FORGE_MT_select,
++    FORGE_MT_display,
++    FORGE_MT_mesh,
++    FORGE_MT_edit_mesh,
++    FORGE_MT_deform,
++    FORGE_MT_windows,
++    FORGE_PT_channel_box,
++    FORGE_PT_modeling,
++    FORGE_PT_diagnostics,
++)
++
++
++def register():
++    for cls in CLASSES:
++        bpy.utils.register_class(cls)
++    bpy.types.VIEW3D_MT_editor_menus.draw = draw_maya_menus
++    bpy.types.TOPBAR_MT_editor_menus.draw = draw_formforge_topbar
++    bpy.types.VIEW3D_HT_header.append(draw_shelf)
++    bpy.types.TEXT_HT_header.append(draw_text_header)
++    bpy.types.TOPBAR_MT_help.draw = draw_formforge_help
++    if _load_handler not in bpy.app.handlers.load_post:
++        bpy.app.handlers.load_post.append(_load_handler)
++    if not bpy.app.background and not bpy.app.timers.is_registered(_brand_native_windows):
++        bpy.app.timers.register(_brand_native_windows, first_interval=0.5, persistent=True)
++    if not bpy.app.background and not bpy.app.timers.is_registered(_apply_formforge_startup):
++        bpy.app.timers.register(_apply_formforge_startup, first_interval=0.8)
++    log_event(
++        "INFO",
++        "FormForge add-on registered",
++        addon_version=ADDON_VERSION,
++        blender=bpy.app.version_string,
++    )
++
++
++def unregister():
++    if bpy.app.timers.is_registered(_apply_formforge_startup):
++        bpy.app.timers.unregister(_apply_formforge_startup)
++    if bpy.app.timers.is_registered(_brand_native_windows):
++        bpy.app.timers.unregister(_brand_native_windows)
++    if _load_handler in bpy.app.handlers.load_post:
++        bpy.app.handlers.load_post.remove(_load_handler)
++    bpy.types.TOPBAR_MT_help.draw = _ORIGINAL_HELP_DRAW
++    bpy.types.TOPBAR_MT_editor_menus.draw = _ORIGINAL_TOPBAR_DRAW
++    bpy.types.VIEW3D_MT_editor_menus.draw = _ORIGINAL_VIEW3D_MENU_DRAW
++    for owner, callback in (
++        (bpy.types.TEXT_HT_header, draw_text_header),
++        (bpy.types.VIEW3D_HT_header, draw_shelf),
++    ):
++        try:
++            owner.remove(callback)
++        except Exception:
++            pass
++    for cls in reversed(CLASSES):
++        try:
++            bpy.utils.unregister_class(cls)
++        except Exception:
++            traceback.print_exc()
++
++
++if __name__ == "__main__":
++    register()
+diff --git a/scripts/addons_core/formforge_maya_ui/blender_manifest.toml b/scripts/addons_core/formforge_maya_ui/blender_manifest.toml
+new file mode 100644
+index 0000000..7274a4c
+--- /dev/null
++++ b/scripts/addons_core/formforge_maya_ui/blender_manifest.toml
+@@ -0,0 +1,16 @@
++schema_version = "1.0.0"
++id = "formforge_maya_ui"
++name = "FormForge Studio - Maya Workflow"
++tagline = "Maya-inspired menus, shelf, channel box and diagnostics"
++type = "add-on"
++tags = ["3D View", "Modeling", "User Interface"]
++version = "0.9.2"
++blender_version_min = "4.5.0"
++maintainer = "FormForge Studio contributors"
++license = ["SPDX:GPL-3.0-or-later"]
++
++[permissions]
++files = "Write the local developer log and user-requested diagnostic exports"
++
++[build]
++paths_exclude_pattern = ["__pycache__/", ".*"]
+diff --git a/scripts/startup/bl_ui/__init__.py b/scripts/startup/bl_ui/__init__.py
+index ebc0282..93e96a7 100644
+--- a/scripts/startup/bl_ui/__init__.py
++++ b/scripts/startup/bl_ui/__init__.py
+@@ -182,6 +182,15 @@ def register():
+ 
+     bpy.app.handlers.translation_update_post.append(translation_update)
+ 
++    # FormForge is a product-level Blender fork, so its bundled workflow layer
++    # is enabled as part of the factory interface rather than as an optional
++    # user-installed add-on.
++    try:
++        import addon_utils
++        addon_utils.enable("formforge_maya_ui", default_set=True, persistent=True)
++    except Exception as exc:
++        print(f"FormForge workflow could not be enabled: {exc}")
++
+     # done...
+ 
+ 
+@@ -190,6 +199,12 @@ def unregister():
+ 
+     properties_paint_common.unregister()
+ 
++    try:
++        import addon_utils
++        addon_utils.disable("formforge_maya_ui", default_set=False)
++    except Exception:
++        pass
++
+     for mod in reversed(_modules_loaded):
+         for cls in reversed(mod.classes):
+             if cls.is_registered:
+diff --git a/source/blender/windowmanager/intern/wm_init_exit.cc b/source/blender/windowmanager/intern/wm_init_exit.cc
+index 9d24f11..c6b8c91 100644
+--- a/source/blender/windowmanager/intern/wm_init_exit.cc
++++ b/source/blender/windowmanager/intern/wm_init_exit.cc
+@@ -383,6 +383,12 @@ void WM_init(bContext *C, int argc, const char **argv)
+ 
+ static bool wm_init_splash_show_on_startup_check()
+ {
++  /* FormForge ships with its own configured workspace. Do not show Blender's
++   * first-run quick-setup dialog, which would replace that workspace before
++   * the FormForge interface add-on has initialized. */
++  return false;
++
++#if 0
+   if (U.uiflag & USER_SPLASH_DISABLE) {
+     return false;
+   }
+@@ -401,6 +407,7 @@ static bool wm_init_splash_show_on_startup_check()
+   }
+ 
+   return use_splash;
++#endif
+ }
+ 
+ void WM_init_splash_on_startup(bContext *C)
+diff --git a/source/blender/windowmanager/intern/wm_window.cc b/source/blender/windowmanager/intern/wm_window.cc
+index db37fa4..2605477 100644
+--- a/source/blender/windowmanager/intern/wm_window.cc
++++ b/source/blender/windowmanager/intern/wm_window.cc
+@@ -610,7 +610,7 @@ static std::string wm_window_title_text(
+     if (is_single && area && area->spacetype != SPACE_EMPTY) {
+       return IFACE_(ED_area_name(area).c_str());
+     }
+-    return "Blender";
++    return "FormForge Studio";
+   }
+ 
+   /* This path may contain invalid UTF8 byte sequences on UNIX systems,
+@@ -693,7 +693,8 @@ static std::string wm_window_title_text(
+     }
+   }
+ 
+-  win_title.append(fmt::format(" - Blender {}", BKE_blender_version_string()));
++  win_title.append(fmt::format(" - FormForge Studio {} (Blender-based)",
++                               BKE_blender_version_string()));
+ 
+   return win_title;
+ }
+diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
+index 8b0c69b..09d216f 100644
+--- a/source/creator/CMakeLists.txt
++++ b/source/creator/CMakeLists.txt
+@@ -354,6 +354,8 @@ else()
+     endif()
+     target_compile_definitions(blender-launcher PRIVATE -D_UNICODE -DUNICODE)
+     target_link_libraries(blender-launcher Pathcch.lib)
++    set_target_properties(blender PROPERTIES OUTPUT_NAME "FormForge")
++    set_target_properties(blender-launcher PROPERTIES OUTPUT_NAME "FormForge-Launcher")
+   endif()
+ endif()
+ 
+@@ -1029,11 +1031,12 @@ elseif(WIN32)
+     install(
+       FILES ${CMAKE_BINARY_DIR}/blender.exe.manifest
+       DESTINATION "."
++      RENAME FormForge.exe.manifest
+     )
+     install(
+       FILES ${CMAKE_BINARY_DIR}/blender.exe.manifest
+       DESTINATION "."
+-      RENAME blender-launcher.exe.manifest
++      RENAME FormForge-Launcher.exe.manifest
+     )
+   endif()
+   windows_install_shared_manifest(
+@@ -2078,7 +2081,7 @@ endif()
+ # Setup launcher
+ 
+ if(WIN32 AND NOT WITH_PYTHON_MODULE)
+-  set(BLENDER_BIN "blender.exe")
++  set(BLENDER_BIN "FormForge.exe")
+   install(
+     TARGETS blender blender-launcher
+     COMPONENT Blender
+diff --git a/source/creator/blender_launcher_win32.c b/source/creator/blender_launcher_win32.c
+index 4969d71..2a4e3d9 100644
+--- a/source/creator/blender_launcher_win32.c
++++ b/source/creator/blender_launcher_win32.c
+@@ -94,8 +94,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
+     return -1;
+   }
+ 
+-  /* Add blender.exe to path, resulting in the full path to the blender executable. */
+-  if (PathCchCombine(path, MAX_PATH, path, L"blender.exe") != S_OK) {
++  /* Add FormForge.exe to path, resulting in the full path to the application executable. */
++  if (PathCchCombine(path, MAX_PATH, path, L"FormForge.exe") != S_OK) {
+     return -1;
+   }
+ 
