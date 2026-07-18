@@ -1,0 +1,95 @@
+name: Build FormForge Studio for Windows - Fixed
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "patches/**"
+      - "installer/**"
+      - ".github/workflows/build-formforge-fixed.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows-installer:
+    runs-on: windows-2022
+    timeout-minutes: 360
+
+    steps:
+      - name: Check out FormForge build files
+        uses: actions/checkout@v4
+
+      - name: Prepare Windows-safe FormForge patch
+        shell: pwsh
+        run: |
+          $patchPath = "$env:GITHUB_WORKSPACE\patches\formforge.patch"
+          $patchText = [System.IO.File]::ReadAllText($patchPath).Replace("`r`n", "`n")
+          $binaryStart = $patchText.IndexOf("diff --git a/release/windows/icons/formforge.ico")
+          if ($binaryStart -ge 0) {
+            $nextPatch = $patchText.IndexOf("diff --git ", $binaryStart + 10)
+            if ($nextPatch -lt 0) { throw "Could not find the end of the icon patch" }
+            $patchText = $patchText.Remove($binaryStart, $nextPatch - $binaryStart)
+          }
+          [System.IO.File]::WriteAllText($patchPath, $patchText, [System.Text.UTF8Encoding]::new($false))
+
+      - name: Check out and patch the Blender engine source
+        shell: pwsh
+        run: |
+          git clone --filter=blob:none https://projects.blender.org/blender/blender.git blender
+          git -C blender checkout 96ae7ff32d6061a53d4e9ba294e5436a94e58332
+          git -C blender apply --check --whitespace=nowarn "$env:GITHUB_WORKSPACE\patches\formforge.patch"
+          git -C blender apply --whitespace=nowarn "$env:GITHUB_WORKSPACE\patches\formforge.patch"
+          $icons = "$env:GITHUB_WORKSPACE\blender\release\windows\icons"
+          $sourceIcon = Get-ChildItem $icons -Filter "*.ico" | Where-Object { $_.Name -ne "formforge.ico" } | Select-Object -First 1
+          if (-not $sourceIcon) { throw "No engine icon was available for the FormForge executable" }
+          Copy-Item $sourceIcon.FullName "$icons\formforge.ico" -Force
+
+      - name: Download Blender build dependencies
+        working-directory: blender
+        shell: cmd
+        run: make update
+
+      - name: Compile the FormForge executable
+        working-directory: blender
+        shell: cmd
+        run: make release
+
+      - name: Stage the compiled application
+        id: stage
+        shell: pwsh
+        run: |
+          $candidates = Get-ChildItem "$env:GITHUB_WORKSPACE\.." -Filter FormForge.exe -File -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -notlike "*\blender\source\*" }
+          $exe = $candidates | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if (-not $exe) { throw "The compile completed without producing FormForge.exe" }
+          $stage = "$env:GITHUB_WORKSPACE\staging\FormForge Studio"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item "$($exe.Directory.FullName)\*" $stage -Recurse -Force
+          Copy-Item "$env:GITHUB_WORKSPACE\blender\COPYING" "$stage\GPL-license.txt" -Force
+          "stage=$stage" >> $env:GITHUB_OUTPUT
+          & "$stage\FormForge.exe" --background --factory-startup --python-expr "import bpy; assert bpy.app.version >= (5, 3, 0); print('FORMFORGE_SMOKE_TEST_OK')"
+
+      - name: Create portable ZIP
+        shell: pwsh
+        run: |
+          7z a -tzip "$env:GITHUB_WORKSPACE\FormForgeStudio-Windows-x64.zip" "${{ steps.stage.outputs.stage }}\*"
+
+      - name: Create Windows installer
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DSourceDir=${{ steps.stage.outputs.stage }}" "$env:GITHUB_WORKSPACE\installer\FormForge.iss"
+          Copy-Item "$env:GITHUB_WORKSPACE\installer\output\FormForgeStudio-Setup.exe" "$env:GITHUB_WORKSPACE\FormForgeStudio-Setup.exe"
+
+      - name: Upload installer and portable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: FormForgeStudio-Windows
+          path: |
+            FormForgeStudio-Setup.exe
+            FormForgeStudio-Windows-x64.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
